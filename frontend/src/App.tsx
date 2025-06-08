@@ -26,7 +26,7 @@ const queryClient = new QueryClient();
 const App = () => {
   useEffect(() => {
     // Making the GET request to your Django API
-    axios.get("http://localhost:8000/api/test/")
+    axios.get("http://localhost:8000/")
       .then(response => {
         console.log("Response from Django backend:", response.data);
       })

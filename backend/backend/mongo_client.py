@@ -3,7 +3,5 @@
 from pymongo import MongoClient
 
 client = MongoClient("mongodb://localhost:27017")
-db = client["staynest_db"]
+db = client["staynest"]
 
-# Example collection
-pg_collection = db["pg_listings"]

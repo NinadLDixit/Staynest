@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import ThemeToggle from "@/components/ui/theme-toggle";
 import { ArrowLeft } from "lucide-react";
+import api from '@/api/apiConfig.ts'
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -15,39 +16,51 @@ const SignUp = () => {
     userType: "tenant",
     agreeToTerms: false,
   });
+
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
-    
+
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match!");
       return;
     }
-    
+
     if (!formData.agreeToTerms) {
       toast.error("You must agree to the Terms of Service and Privacy Policy");
       return;
     }
-    
-    console.log("Sign Up:", formData);
-    toast.success("Account created successfully!");
-    // In a real app, this would register the user
-    navigate("/");
+
+    try {
+      const response = await api.post("/users/register/", {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        userType: formData.userType,
+      });
+
+      console.log("Signup Success:", response.data);
+      toast.success("Account created successfully!");
+      navigate("/signin");
+    } catch (error: any) {
+      console.error("Signup Error:", error.response?.data || error.message);
+      toast.error(error.response?.data?.message || "Failed to create account");
+    }
   };
 
   const handleGoBack = () => {
-    navigate(-1); // Go back to previous page
+    navigate(-1);
   };
 
   return (

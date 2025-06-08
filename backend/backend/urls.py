@@ -1,41 +1,11 @@
-"""
-URL configuration for backend project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
+from django.conf import settings
 from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from pg_finder.views import pg_listings  # Import the new view
-from rest_framework import routers
-from backend.views import homepage 
-# Initialize the router for DRF viewsets
-router = DefaultRouter()
-
-# Here you register your API viewsets
-# If you had viewsets, you would register them here, for example:
-# router.register(r'pgs', PGViewSet, basename='pg')
-
+from django.conf.urls.static import static
+from . import views
 urlpatterns = [
-    path('', homepage),
-    path('admin/', admin.site.urls),  # Admin interface
-    path('api/', include(router.urls)),  # DRF API routes (if you're using viewsets)
-    
-    # Direct route for the PG listings
-    path('api/pg_listings/', pg_listings, name='pg_listings'),  # The route for your view
-    
-    # You can add more routes here as needed
-]
-
-
+    path('admin/', admin.site.urls),
+    path('',views.homepage,name='home'),
+    path('users/', include('users.urls')), 
+    path("properties/", include("properties.urls")), # Include the users app's URL patterns
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

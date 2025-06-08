@@ -1,5 +1,5 @@
 # backend/views.py
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 
 def homepage(request):
-    return JsonResponse({'message': 'Welcome to the API!'})
+    return HttpResponse("Hi Welcome")
